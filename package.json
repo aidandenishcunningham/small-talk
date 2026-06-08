@@ -1,0 +1,25 @@
+{
+  "name": "small-talk",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~55.0.17",
+    "expo-notifications": "~55.0.20",
+    "expo-status-bar": "~55.0.5",
+    "react": "19.2.0",
+    "react-native": "0.83.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@types/react": "~19.2.10",
+    "babel-preset-expo": "^55.0.7",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Small Talk",
+    "slug": "small-talk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "smalltalk",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#f5efe6"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.smalltalk"
+    },
+    "android": {
+      "package": "com.example.smalltalk",
+      "adaptiveIcon": {
+        "backgroundColor": "#f5efe6"
+      }
+    },
+    "plugins": [
+      "expo-notifications"
+    ],
+    "extra": {
+      "projectStage": "mvp"
+    }
+  }
+}
