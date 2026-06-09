@@ -72,17 +72,14 @@ export default function App() {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.hero}>
-          <Text style={styles.eyebrow}>Small Talk</Text>
-          <Text style={styles.title}>AI help for awkward social moments.</Text>
-          <Text style={styles.subtitle}>
-            Build confidence before the event, get context-aware prompts during it, and keep the
-            conversation feeling human.
-          </Text>
+          <Text style={styles.eyebrow}><Text style={styles.eyebrowLower}>small</Text> TALK</Text>
+          <Text style={styles.title}>Big help for small talk.</Text>
+          <Text style={styles.subtitle}>Your chit chat buddy.</Text>
         </View>
 
         {/* Random Question Generator */}
         <View style={styles.randomCard}>
-          <Text style={styles.randomEyebrow}>Random Question</Text>
+          <Text style={styles.randomEyebrow}>Random Conversation Starter</Text>
           <Text style={styles.randomQuestion}>{randomQuestion}</Text>
           <Pressable
             style={styles.randomButton}
@@ -311,9 +308,11 @@ const styles = StyleSheet.create({
     color: "#f3c969",
     fontSize: 13,
     fontWeight: "700",
-    textTransform: "uppercase",
     letterSpacing: 1.1,
     marginBottom: 10,
+  },
+  eyebrowLower: {
+    textTransform: "lowercase",
   },
   title: {
     color: "#fffaf2",

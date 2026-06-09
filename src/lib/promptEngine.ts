@@ -106,21 +106,21 @@ const promptBank = {
 };
 
 const randomQuestionPool = [
-  "If you could swap jobs with anyone in this room for a week, who would you pick?",
-  "What is something you changed your mind about in the last year?",
-  "What is the best piece of advice you have actually acted on?",
-  "What skill are you quietly working on right now?",
-  "What is a topic you could talk about for twenty minutes without preparing?",
-  "What is the most interesting thing you have learned recently?",
-  "What is something most people assume about you that is wrong?",
-  "What would you be doing today if you had taken a completely different path?",
-  "What is the last thing that genuinely surprised you?",
-  "What do you think is underrated that more people should try?",
-  "What is a habit you have picked up that has actually stuck?",
-  "If you had a free Saturday with no obligations, how would you spend it?",
-  "What is something you do well that you rarely get to use at work?",
-  "What question do you wish people asked you more often?",
-  "What is the best conversation you have had in the last month?",
+  "Best meal you have had lately?",
+  "Most surprising thing you learned recently?",
+  "What hobby are you terrible at?",
+  "Dream holiday — where and why?",
+  "What are you binge-watching right now?",
+  "Best advice you ever ignored?",
+  "Morning person or night owl?",
+  "What skill do you want next?",
+  "Favourite thing about your weekends?",
+  "What made you laugh this week?",
+  "Coffee, tea, or something else?",
+  "What would your superpower be?",
+  "Proudest thing you did this year?",
+  "Last great book you recommended?",
+  "Weirdest job you have ever had?",
 ];
 
 function shuffle<T>(arr: T[]): T[] {
