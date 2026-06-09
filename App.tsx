@@ -11,8 +11,17 @@ import {
   View,
 } from "react-native";
 import { socialContexts } from "./src/data/socialContexts";
-import { buildNotificationIdeas, generatePrompts } from "./src/lib/promptEngine";
-import { ContextKey, ConversationPrompt, EventInput, ProfileSignals } from "./src/types";
+import {
+  buildNotificationIdeas,
+  generatePrompts,
+  getRandomQuestion,
+} from "./src/lib/promptEngine";
+import {
+  ContextKey,
+  ConversationPrompt,
+  EventInput,
+  ProfileSignals,
+} from "./src/types";
 
 const initialProfile: ProfileSignals = {
   name: "Aidan",
@@ -38,8 +47,14 @@ export default function App() {
   const [notificationIdeas, setNotificationIdeas] = useState<string[]>(() =>
     buildNotificationIdeas(initialEvent),
   );
+  const [randomQuestion, setRandomQuestion] = useState<string>(() =>
+    getRandomQuestion(),
+  );
 
-  function regeneratePrompts(nextEvent: EventInput = eventInput, nextProfile: ProfileSignals = profile) {
+  function regeneratePrompts(
+    nextEvent: EventInput = eventInput,
+    nextProfile: ProfileSignals = profile,
+  ) {
     setPrompts(generatePrompts(nextProfile, nextEvent));
     setNotificationIdeas(buildNotificationIdeas(nextEvent));
   }
@@ -49,6 +64,8 @@ export default function App() {
     setEventInput(nextEvent);
     regeneratePrompts(nextEvent, profile);
   }
+
+  const comfortLabels = ["Very shy", "Shy", "Neutral", "Comfortable", "Very comfortable"];
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -61,6 +78,18 @@ export default function App() {
             Build confidence before the event, get context-aware prompts during it, and keep the
             conversation feeling human.
           </Text>
+        </View>
+
+        {/* Random Question Generator */}
+        <View style={styles.randomCard}>
+          <Text style={styles.randomEyebrow}>Random Question</Text>
+          <Text style={styles.randomQuestion}>{randomQuestion}</Text>
+          <Pressable
+            style={styles.randomButton}
+            onPress={() => setRandomQuestion(getRandomQuestion())}
+          >
+            <Text style={styles.randomButtonText}>New question</Text>
+          </Pressable>
         </View>
 
         <View style={styles.card}>
@@ -76,6 +105,7 @@ export default function App() {
             placeholderTextColor="#8a7e70"
             style={styles.input}
           />
+
           <Text style={styles.miniLabel}>Conversation tone</Text>
           <View style={styles.pillRow}>
             {(["warm", "playful", "professional"] as ProfileSignals["tone"][]).map((tone) => (
@@ -94,6 +124,27 @@ export default function App() {
               </Pressable>
             ))}
           </View>
+
+          <Text style={styles.miniLabel}>
+            Comfort level — {comfortLabels[(profile.comfortLevel ?? 3) - 1]}
+          </Text>
+          <View style={styles.comfortRow}>
+            {[1, 2, 3, 4, 5].map((level) => (
+              <Pressable
+                key={level}
+                onPress={() => {
+                  const nextProfile = { ...profile, comfortLevel: level };
+                  setProfile(nextProfile);
+                  regeneratePrompts(eventInput, nextProfile);
+                }}
+                style={[
+                  styles.comfortDot,
+                  profile.comfortLevel >= level && styles.comfortDotActive,
+                ]}
+              />
+            ))}
+          </View>
+
           <View style={styles.switchRow}>
             <Text style={styles.switchLabel}>Lean into parent-chat prompts</Text>
             <Switch
@@ -164,7 +215,11 @@ export default function App() {
           />
           <TextInput
             value={eventInput.timeframeLabel}
-            onChangeText={(timeframeLabel) => setEventInput({ ...eventInput, timeframeLabel })}
+            onChangeText={(timeframeLabel) => {
+              const nextEvent = { ...eventInput, timeframeLabel };
+              setEventInput(nextEvent);
+              regeneratePrompts(nextEvent, profile);
+            }}
             placeholder="When is the event?"
             placeholderTextColor="#8a7e70"
             style={styles.input}
@@ -181,7 +236,9 @@ export default function App() {
           {prompts.map((prompt) => (
             <View key={prompt.id} style={styles.promptCard}>
               <View style={styles.rowBetween}>
-                <Text style={styles.promptLabel}>{prompt.premium ? "Premium-ready" : "Prompt"}</Text>
+                <Text style={styles.promptLabel}>
+                  {prompt.premium ? "Premium-ready" : "Prompt"}
+                </Text>
                 <Text style={styles.promptBadge}>{eventInput.contextKey}</Text>
               </View>
               <Text style={styles.promptOpener}>{prompt.opener}</Text>
@@ -208,6 +265,26 @@ export default function App() {
             Add a company name, a public profile link, or a meeting goal and generate tailored
             talking points, safe industry themes, and first-five-minute conversation ideas.
           </Text>
+          <View style={styles.premiumInputGroup}>
+            <TextInput
+              placeholder="Company or organisation name"
+              placeholderTextColor="#7a9e99"
+              style={styles.premiumInput}
+            />
+            <TextInput
+              placeholder="Their LinkedIn or profile URL"
+              placeholderTextColor="#7a9e99"
+              style={styles.premiumInput}
+            />
+            <TextInput
+              placeholder="Your meeting goal"
+              placeholderTextColor="#7a9e99"
+              style={styles.premiumInput}
+            />
+          </View>
+          <Pressable style={styles.premiumButton}>
+            <Text style={styles.premiumButtonText}>Generate tailored pack</Text>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -250,6 +327,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 23,
   },
+  randomCard: {
+    backgroundColor: "#f3c969",
+    borderRadius: 24,
+    padding: 20,
+  },
+  randomEyebrow: {
+    color: "#6b4e00",
+    fontSize: 12,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 10,
+  },
+  randomQuestion: {
+    color: "#2f2a25",
+    fontSize: 20,
+    fontWeight: "800",
+    lineHeight: 27,
+    marginBottom: 16,
+  },
+  randomButton: {
+    alignSelf: "flex-start",
+    backgroundColor: "#183a37",
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  randomButtonText: {
+    color: "#fff8ee",
+    fontWeight: "700",
+    fontSize: 14,
+  },
   card: {
     backgroundColor: "#fffaf2",
     borderRadius: 24,
@@ -288,7 +397,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   pill: {
     paddingHorizontal: 14,
@@ -306,6 +415,23 @@ const styles = StyleSheet.create({
   },
   pillTextActive: {
     color: "#fff8ee",
+  },
+  comfortRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 16,
+  },
+  comfortDot: {
+    width: 36,
+    height: 36,
+    borderRadius: 999,
+    backgroundColor: "#f6eee4",
+    borderWidth: 1,
+    borderColor: "#eadfce",
+  },
+  comfortDotActive: {
+    backgroundColor: "#183a37",
+    borderColor: "#183a37",
   },
   switchRow: {
     flexDirection: "row",
@@ -335,9 +461,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e6f0ee",
   },
   contextEmoji: {
-    color: "#b86f52",
-    fontWeight: "800",
-    fontSize: 18,
+    fontSize: 22,
     marginBottom: 8,
   },
   contextTitle: {
@@ -444,5 +568,31 @@ const styles = StyleSheet.create({
     color: "#d6e3df",
     fontSize: 15,
     lineHeight: 22,
+    marginBottom: 16,
+  },
+  premiumInputGroup: {
+    gap: 10,
+    marginBottom: 14,
+  },
+  premiumInput: {
+    backgroundColor: "#1f4a46",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#2e6660",
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    fontSize: 15,
+    color: "#fffaf2",
+  },
+  premiumButton: {
+    backgroundColor: "#f3c969",
+    borderRadius: 999,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  premiumButtonText: {
+    color: "#2f2a25",
+    fontWeight: "800",
+    fontSize: 15,
   },
 });
